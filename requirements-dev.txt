@@ -1,3 +1,8 @@
+-r requirements.txt
 pytest
 pre-commit
--e git+git@github.com:jwallnoefer/graphepp.git@dev#egg=graphepp
+twine
+setuptools
+wheel
+#-e git+git@github.com:jwallnoefer/graphepp.git@dev#egg=graphepp
+-e ./
