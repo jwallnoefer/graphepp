@@ -3,6 +3,10 @@
 **GraphEPP is a collection of functions for multipartite entanglement
 purification protocols (EPP) on noisy graph states.**
 
+![GHZ](https://user-images.githubusercontent.com/11145016/114246620-59c11380-9993-11eb-9b38-abd067d2363f.png)
+
+[![Tests, Artifacts and Release](https://github.com/jwallnoefer/graphepp/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/jwallnoefer/graphepp/actions/workflows/ci.yaml)
+
 # Installation
 
 You can install GraphEEP into your python environment from the
