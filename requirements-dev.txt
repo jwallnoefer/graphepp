@@ -1,0 +1,3 @@
+pytest
+pre-commit
+-e git+git@github.com:jwallnoefer/graphepp.git@dev#egg=graphepp
