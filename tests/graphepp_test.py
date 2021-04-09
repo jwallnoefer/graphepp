@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 import graphepp as gg
+from graphepp.graphepp import _mask_a, _mask_b, _mask_k
 
 
 def random_graph(num_vertices, p=0.5):
@@ -700,7 +701,7 @@ class TestTwoColorableEPP(unittest.TestCase):
                 N=test_graph.N, E=test_graph.E, sets=[first_set, second_set]
             )
             for short_bit_string in range(2 ** len(test_graph.a)):
-                long_bit_string = gg._mask_a(j=short_bit_string, graph=test_graph)
+                long_bit_string = _mask_a(j=short_bit_string, graph=test_graph)
                 short_string = format(
                     short_bit_string, "0" + str(len(test_graph.a)) + "b"
                 )
@@ -725,7 +726,7 @@ class TestTwoColorableEPP(unittest.TestCase):
                 N=test_graph.N, E=test_graph.E, sets=[first_set, second_set]
             )
             for short_bit_string in range(2 ** len(test_graph.b)):
-                long_bit_string = gg._mask_b(j=short_bit_string, graph=test_graph)
+                long_bit_string = _mask_b(j=short_bit_string, graph=test_graph)
                 short_string = format(
                     short_bit_string, "0" + str(len(test_graph.b)) + "b"
                 )
@@ -1105,7 +1106,7 @@ class TestArbitraryGraphEPP(unittest.TestCase):
                 )
             )
             for short_bit_string in range(2 ** len(random_set)):
-                long_bit_string = gg._mask_k(
+                long_bit_string = _mask_k(
                     j=short_bit_string, graph=test_graph, subset=random_set
                 )
                 short_string = format(
