@@ -100,6 +100,30 @@ pytest ./tests/graphepp_test.py
 
 But pytest is very good at auto-discovery.
 
+## Documentation
+
+The Documentation is hosted on [readthedocs](https://readthedocs.org/)
+and build with
+[Sphinx](https://www.sphinx-doc.org).
+
+[http://graphepp.readthedocs.io](http://graphepp.readthedocs.io)
+
+To get started:
+
+ - [Getting Started with Sphinx](https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html)
+ - [Re-Structured Text Primer](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html)
+
+The development environment described above, should have everything
+you need to build the documentation locally.
+Just run:
+
+```
+cd docs/
+make html
+```
+
+And open ./docs/_build/html/index.html in your browser.
+
 ## Packaging
 
 Packages can be manually build and uploaded with:
