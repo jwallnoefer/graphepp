@@ -3,7 +3,7 @@
 **GraphEPP is a collection of functions for multipartite entanglement
 purification protocols (EPP) on noisy graph states.**
 
-# Installation
+## Installation
 
 You can install GraphEEP into your python environment from the
 [Python Package Index](https://pypi.org/project/graphepp/)

@@ -4,5 +4,8 @@ pre-commit
 twine
 setuptools
 wheel
+sphinx
+autodocsumm
+recommonmark
 #-e git+git@github.com:jwallnoefer/graphepp.git@dev#egg=graphepp
 -e ./
