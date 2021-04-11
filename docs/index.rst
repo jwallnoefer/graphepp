@@ -1,26 +1,26 @@
 Welcome to GraphEPP's documentation!
 ====================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   README
-
-
-API Reference
--------------
-
-If you are looking for information on a specific function, class, or
-method, this part of the documentation is for you.
+User Manual
+-----------
 
 .. toctree::
    :maxdepth: 2
 
+   readme
    api
+   examples
+
+Development
+-----------
+
+.. toctree::
+   :maxdepth: 2
+
+   contributing
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
