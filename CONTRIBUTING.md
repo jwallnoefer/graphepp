@@ -131,7 +131,7 @@ Packages can be manually build and uploaded with:
 ```
 rm -rf ./dist/
 python setup.py bdist_wheel
-twine upload ./dist/raphepp-*.whl \
+twine upload ./dist/graphepp-*.whl \
     --username __token__ --password "$(pass graphepp-pypi-token)" \
     --repository-url https://test.pypi.org/legacy/
 ```
