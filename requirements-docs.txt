@@ -1,5 +1,5 @@
 sphinx
 autodocsumm
-recommonmark
+recommonmark==0.7.1
 sphinx-rtd-theme
 -e ./

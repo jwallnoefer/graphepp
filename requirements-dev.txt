@@ -7,6 +7,6 @@ setuptools
 wheel
 sphinx
 autodocsumm
-recommonmark
+recommonmark==0.7.1
 #-e git+git@github.com:jwallnoefer/graphepp.git@dev#egg=graphepp
 -e ./
