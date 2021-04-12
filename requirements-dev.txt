@@ -1,0 +1,12 @@
+-r requirements.txt
+-r requirements-docs.txt
+pytest
+pre-commit
+twine
+setuptools
+wheel
+sphinx
+autodocsumm
+recommonmark
+#-e git+git@github.com:jwallnoefer/graphepp.git@dev#egg=graphepp
+-e ./

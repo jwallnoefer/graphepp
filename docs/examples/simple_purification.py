@@ -1,8 +1,4 @@
 """Applying the multipartite entanglement purification protocol."""
-
-import os, sys
-
-sys.path.insert(0, os.path.abspath(".."))
 import graphepp as gg
 import numpy as np
 

@@ -1,8 +1,4 @@
 """Find the fixed point of an EPP with noisy CNOT gates."""
-
-import os, sys
-
-sys.path.insert(0, os.path.abspath(".."))
 import graphepp as gg
 import numpy as np
 

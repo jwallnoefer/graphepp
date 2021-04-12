@@ -2,10 +2,6 @@
 
 Here we look at an example for a 6-qubit graph state that is three-colorable.
 """
-
-import os, sys
-
-sys.path.insert(0, os.path.abspath(".."))
 import graphepp as gg
 import numpy as np
 
