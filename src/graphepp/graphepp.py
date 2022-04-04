@@ -172,7 +172,7 @@ def noisy(rho, subset, graph=None):
     N = int(np.log2(len(rho)))
     rho = rho.reshape((2,) * N)
     rho = np.flip(rho, axis=subset)
-    rho = rho.reshape((2 ** N,))
+    rho = rho.reshape((2**N,))
     return rho
 
 
@@ -725,7 +725,7 @@ def p1(rho, graph):
 
     """
     mu = np.zeros(len(rho))
-    for i in range(2 ** graph.N):
+    for i in range(2**graph.N):
         j = i & (_mask_b((1 << len(graph.b)) - 1, graph))
         for k in range(2 ** len(graph.b)):
             m = _mask_b(k, graph)
@@ -760,7 +760,7 @@ def p2(rho, graph):
 
     """
     mu = np.zeros(len(rho))
-    for i in range(2 ** graph.N):
+    for i in range(2**graph.N):
         j = i & (_mask_a((1 << len(graph.a)) - 1, graph))
         for k in range(2 ** len(graph.a)):
             m = _mask_a(k, graph)
@@ -793,7 +793,7 @@ def p1_var(rho, sigma, graph):
 
     """
     mu = np.zeros(len(rho))
-    for i in range(2 ** graph.N):
+    for i in range(2**graph.N):
         j = i & (_mask_b((1 << len(graph.b)) - 1, graph))
         for k in range(2 ** len(graph.b)):
             m = _mask_b(k, graph)
@@ -826,7 +826,7 @@ def p2_var(rho, sigma, graph):
 
     """
     mu = np.zeros(len(rho))
-    for i in range(2 ** graph.N):
+    for i in range(2**graph.N):
         j = i & (_mask_a((1 << len(graph.a)) - 1, graph))
         for k in range(2 ** len(graph.a)):
             m = _mask_a(k, graph)
@@ -914,7 +914,7 @@ def pk(rho, sigma, graph1, graph2, subset):
     """
     mu = np.zeros(len(rho))
     other_set = tuple(i for i in range(graph1.N) if i not in subset)
-    for i in range(2 ** graph1.N):
+    for i in range(2**graph1.N):
         j = i & (_mask_k((1 << len(other_set)) - 1, graph1, other_set))
         for k in range(2 ** len(other_set)):
             m = _mask_k(k, graph1, other_set)

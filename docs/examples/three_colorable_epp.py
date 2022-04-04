@@ -19,19 +19,19 @@ aux_graph2 = gg.Graph(N=6, E=[(0, 1), (0, 4), (1, 2), (1, 3), (3, 4), (4, 5)])
 aux_graph3 = gg.Graph(N=6, E=[(0, 5), (1, 3), (2, 3), (2, 5), (3, 4), (4, 5)])
 
 # assume we have all these states available, with the same noise per qubit
-rho = np.zeros(2 ** main_graph.N, dtype=np.float)
+rho = np.zeros(2**main_graph.N, dtype=np.float)
 rho[0] = 1.0  # perfect graph state
 rho = gg.wnoise_all(rho=rho, p=0.98, graph=main_graph)
 
-mu1 = np.zeros(2 ** aux_graph1.N, dtype=np.float)
+mu1 = np.zeros(2**aux_graph1.N, dtype=np.float)
 mu1[0] = 1.0
 mu1 = gg.wnoise_all(rho=mu1, p=0.98, graph=aux_graph1)
 
-mu2 = np.zeros(2 ** aux_graph2.N, dtype=np.float)
+mu2 = np.zeros(2**aux_graph2.N, dtype=np.float)
 mu2[0] = 1.0
 mu2 = gg.wnoise_all(rho=mu2, p=0.98, graph=aux_graph2)
 
-mu3 = np.zeros(2 ** aux_graph3.N, dtype=np.float)
+mu3 = np.zeros(2**aux_graph3.N, dtype=np.float)
 mu3[0] = 1.0
 mu3 = gg.wnoise_all(rho=mu3, p=0.98, graph=aux_graph3)
 
