@@ -98,23 +98,6 @@ jobs:
         path: dist
     - run: twine check dist/*
 
-  dist_upload_test_pypi:
-    runs-on: ubuntu-latest
-    if: github.event.ref == 'refs/heads/dev'
-    needs: [dist_check]
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: dist
-          path: dist
-      - name: Publish distribution to Test PyPI
-        uses: pypa/gh-action-pypi-publish@v1.5.0
-        with:
-          user: __token__
-          password: ${{ secrets.test_pypi_token }}
-          repository_url: https://test.pypi.org/legacy/
-          skip_existing: true
-
   dist_upload:
     runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags')
