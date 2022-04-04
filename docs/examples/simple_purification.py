@@ -10,7 +10,7 @@ ghz_graph = gg.Graph(N=3, E=((0, 1), (0, 2)), sets=[[0], [1, 2]])
 # the sets indicate the coloring of this two-colorable graph state
 # note that vertices are counting from 0...N-1
 
-rho = np.zeros(2 ** ghz_graph.N, dtype=np.float)
+rho = np.zeros(2**ghz_graph.N, dtype=np.float)
 rho[0] = 1.0  # this means the state is the perfect graph state
 perfect_state = np.copy(rho)
 # start with an initally noise state
@@ -30,7 +30,7 @@ print("Example 2: Linear cluster state convergence")
 linear_cluster_graph = gg.Graph(
     N=5, E=((0, 1), (1, 2), (2, 3), (3, 4)), sets=[[0, 2, 4], [1, 3]]
 )
-rho = np.zeros(2 ** linear_cluster_graph.N, dtype=np.float)
+rho = np.zeros(2**linear_cluster_graph.N, dtype=np.float)
 rho[0] = 1.0  # the perfect graph state
 # first consider a slightly noisy state
 mu = gg.wnoise_all(rho=rho, p=0.95, graph=linear_cluster_graph)
@@ -57,7 +57,7 @@ print("Example 3: GHZ Fidelity change during purification")
 ghz_graph = gg.Graph(N=3, E=((0, 1), (0, 2)), sets=[[0], [1, 2]])
 
 
-rho = np.zeros(2 ** ghz_graph.N, dtype=np.float)
+rho = np.zeros(2**ghz_graph.N, dtype=np.float)
 rho[0] = 1.0
 perfect_state = np.copy(rho)
 # start with an initally noise state
