@@ -23,6 +23,8 @@ jobs:
     needs: [pre-commit]
     steps:
     - uses: actions/checkout@master
+    - name: Fetch all tags, so setuptools_scm can determine version
+      run: git fetch --prune --unshallow --tags
     - name: Set up Python 3.8
       uses: actions/setup-python@v1
       with:
