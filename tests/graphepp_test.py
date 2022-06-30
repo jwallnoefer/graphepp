@@ -788,7 +788,7 @@ class TestTwoColorableEPP(unittest.TestCase):
         test_graph = gg.Graph(
             N=5, E=((0, 1), (1, 2), (2, 3), (3, 4)), sets=[[0, 2, 4], [1, 3]]
         )  # 5 qubit linear cluster state
-        test_rho = np.zeros(2**5, dtype=np.float)
+        test_rho = np.zeros(2**5, dtype=float)
         test_rho[0] = 1.0
         test_rho = gg.wnoise_all(rho=test_rho, p=0.99, graph=test_graph)
         test_result = gg.p1(rho=test_rho, graph=test_graph)
@@ -887,7 +887,7 @@ class TestTwoColorableEPP(unittest.TestCase):
         test_graph = gg.Graph(
             N=5, E=((0, 1), (1, 2), (2, 3), (3, 4)), sets=[[0, 2, 4], [1, 3]]
         )  # 5 qubit linear cluster state
-        test_rho = np.zeros(2**5, dtype=np.float)
+        test_rho = np.zeros(2**5, dtype=float)
         test_rho[0] = 1.0
         test_rho = gg.wnoise_all(rho=test_rho, p=0.99, graph=test_graph)
         test_result = gg.p2(rho=test_rho, graph=test_graph)
