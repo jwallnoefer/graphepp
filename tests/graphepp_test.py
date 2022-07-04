@@ -682,6 +682,53 @@ class TestAuxiliaryFunctions(unittest.TestCase):
                                 complemented_graph.adj[i, j], test_graph.adj[i, j]
                             )
 
+    def test_complement_state(self):
+        # first some simple examples
+        test_graph = gg.Graph(3, [(0, 1), (1, 2)])
+        test_state = np.arange(2**test_graph.N)
+        result_state = gg.complement_state(test_state, 0, test_graph)
+        for i in range(2**3):
+            if i >= 2**2:
+                self.assertEqual(
+                    result_state[i], test_state[i ^ 2]
+                )  # bitwise map of neighbourhood
+            else:
+                self.assertEqual(result_state[i], test_state[i])
+        result_state = gg.complement_state(test_state, 1, test_graph)
+        for i in range(2**3):
+            if i & 2 != 0:
+                self.assertEqual(
+                    result_state[i], test_state[i ^ 5]
+                )  # bitwise map of neighbourhood
+            else:
+                self.assertEqual(result_state[i], test_state[i])
+        # test with random graph, random states and inefficient verification function
+        for num_vertices in range(1, 10):
+            for _ in range(10):
+                test_graph = random_graph(num_vertices)
+                test_state = np.random.random(2**num_vertices)
+                for lc_vertex in range(
+                    num_vertices
+                ):  # try all possible complementations
+                    result_state = gg.complement_state(
+                        test_state, lc_vertex, test_graph
+                    )
+                    lc_vertex_bitstring = 1 << (num_vertices - lc_vertex - 1)
+                    neighbourhood_bitstring = 0
+                    for vertex in range(num_vertices):
+                        if test_graph.adj[vertex, lc_vertex]:
+                            neighbourhood_bitstring = neighbourhood_bitstring | (
+                                1 << (num_vertices - vertex - 1)
+                            )
+                    # now verify
+                    for i in range(2**num_vertices):
+                        if i & lc_vertex_bitstring:
+                            self.assertEqual(
+                                result_state[i], test_state[i ^ neighbourhood_bitstring]
+                            )  # bitwise map of neighbourhood
+                        else:
+                            self.assertEqual(result_state[i], test_state[i])
+
 
 class TestTwoColorableEPP(unittest.TestCase):
     def test_mask_a(self):

@@ -609,6 +609,48 @@ def local_complementation(n, graph):
     )  # just copies sets without thinking
 
 
+def complement_state(rho, n, graph):
+    """Update graph state basis entries after local complementation.
+
+    The entries in the new graph state basis are switched around a bit:
+    | µ'>_G' = U_n^τ(G) | µ>_G
+
+    with update rule
+    µ'_i = µ_i XOR µ_n  if i in the neighbourhood of n
+    µ'_i = µ_i          otherwise
+
+    This is shown in Appendix B of Phys. Rev. A 95, 012303 (2017)
+    Preprint: https://doi.org/10.48550/arXiv.1609.05754
+
+    Parameters
+    ----------
+    rho : np.ndarray
+        The state given in the graph state basis corresponding to the original
+        `graph`.
+    n : int
+        Local complementation around the `n`-th vertex.
+    graph : Graph
+        The original graph.
+
+    Returns
+    -------
+    np.ndarray
+        The state given in the graph state basis corresponding to the updated
+        graph.
+
+    """
+    # get neighbourhood of n
+    Nn = []
+    for i in range(graph.N):
+        if graph.adj[i, n]:
+            Nn += [i]
+    rho = rho.reshape((2,) * graph.N)
+    rho0, rho1 = np.split(rho, indices_or_sections=2, axis=n)
+    rho1 = np.flip(rho1, axis=Nn)
+    mu = np.concatenate([rho0, rho1], axis=n)
+    return mu.reshape(2**graph.N)
+
+
 # ====EPP functions for two-colorable states==== #
 
 
