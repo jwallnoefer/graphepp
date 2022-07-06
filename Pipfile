@@ -17,6 +17,7 @@ pre-commit = "*"
 twine = "*"
 setuptools = "*"
 wheel = "*"
+build = "*"
 
 [requires]
 python_version = "3.8"
