@@ -8,22 +8,22 @@ an official release.
 
 ## Development Environment
 
-You can setup a development Environment for GraphEPP like so:
+This project uses `pipenv` for setting up a stable development environment.
+The following assumes Python 3.8 and `pipenv` are installed on your system.
+You can set up the development environment like this:
 
 ```
 git clone https://github.com/jwallnoefer/graphepp.git
 cd graphepp
-python -m venv eppenv && source eppenv/bin/activate
-git checkout -b "$USER-branch"
-pip install -r requirements-dev.txt
-pre-commit install
+git checkout dev
+pipenv sync --dev
+pipenv run pre-commit install
+pipenv shell
 ```
 
-Which should clone this repository and install the necessary tools and
-dependencies into a Python virtual environment named `eppenv`.
-You can enter this environment by via `source eppenv/bin/activate`
-(on windows: `eppenv\Scripts\activate.bat`) and exit it by calling
-`deactivate`.
+This clones the repository and installs the necessary tools and dependencies
+into a Python virtual environment, that is managed by `pipenv`. `pipenv shell`
+launches a new subshell with this virtual environment activated.
 
 ## Workflows
 
