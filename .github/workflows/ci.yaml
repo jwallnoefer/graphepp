@@ -42,7 +42,7 @@ jobs:
           update: true
       - run: pip install --upgrade setuptools
         if: matrix.python_version != 'msys2'
-      - run: pip install -e ./ pytest
+      - run: pip install -e ./[test]
       - run: pytest
 
   check_install:
