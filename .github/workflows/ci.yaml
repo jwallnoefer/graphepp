@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python_version: [ '3.8', '3.9' ]
+        python_version: [ '3.8', '3.9', '3.10' ]
         os: [windows-latest, ubuntu-latest] #, macos-latest]
         # include:
         # - os: windows-latest
@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python_version: [  '3.8', '3.9' ]
+        python_version: [  '3.8', '3.9', '3.10' ]
     name: check install - Python ${{ matrix.python_version }}
     steps:
       - uses: actions/checkout@v1
