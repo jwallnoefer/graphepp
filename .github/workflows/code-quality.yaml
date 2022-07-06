@@ -34,7 +34,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install --upgrade wheel setuptools setuptools_scm build
     - name: Build package
-      run: python python -m build -s -w -o dist/
+      run: python -m build -s -w -o dist/
     - name: Publish distribution to Test PyPI
       uses: pypa/gh-action-pypi-publish@master
       with:
