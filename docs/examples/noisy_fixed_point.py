@@ -15,7 +15,7 @@ print(
     f"CNOTs are noisy with local depolarizing noise with error parameter p={noise_param:.2f}"
 )
 
-rho = np.zeros(2 ** ghz5_graph.N, dtype=np.float)
+rho = np.zeros(2**ghz5_graph.N, dtype=np.float)
 rho[0] = 1.0  # perfect state
 
 for i in range(
@@ -41,7 +41,7 @@ print("Fixed point fidelity as function of CNOT noise parameter")
 
 
 def noisy_fixed_point(graph, noise_param):
-    rho = np.zeros(2 ** graph.N, dtype=np.float)
+    rho = np.zeros(2**graph.N, dtype=np.float)
     rho[0] = 1.0  # perfect state
     for i in range(
         100

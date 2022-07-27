@@ -90,20 +90,20 @@ class TestNoise(unittest.TestCase):
     def test_noisy(self):
         # test small case with random numbers
         num_qubits = 2
-        test_rho = np.random.random(2 ** num_qubits)
+        test_rho = np.random.random(2**num_qubits)
         test_rho = test_rho / np.sum(test_rho)
         test_result = gg.noisy(rho=test_rho, subset=[num_qubits - 1])
         known_result = np.array([test_rho[1], test_rho[0], test_rho[3], test_rho[2]])
         self.assertTrue(np.allclose(test_result, known_result))
         # test all single qubit patterns for an 8 qubit state
         num_qubits = 8
-        test_rho = np.random.random(2 ** num_qubits)
+        test_rho = np.random.random(2**num_qubits)
         test_rho = test_rho / np.sum(test_rho)
         for qubit_index in range(num_qubits):
             test_result = gg.noisy(rho=test_rho, subset=[qubit_index])
             known_result = np.zeros_like(test_rho)
             binary_mask = 1 << ((num_qubits - 1) - qubit_index)
-            for i in range(2 ** num_qubits):
+            for i in range(2**num_qubits):
                 known_result[i] = test_rho[i ^ binary_mask]
             self.assertTrue(np.allclose(test_result, known_result))
         # test random patterns on states of random size
@@ -111,7 +111,7 @@ class TestNoise(unittest.TestCase):
             num_qubits = np.random.randint(
                 1, 16
             )  # up to 15 qubits shouldn't take too long to test
-            test_rho = np.random.random(2 ** num_qubits)
+            test_rho = np.random.random(2**num_qubits)
             test_rho = test_rho / np.sum(test_rho)
             amount_choices = np.random.randint(num_qubits)
             chosen_qubits = np.sort(
@@ -126,7 +126,7 @@ class TestNoise(unittest.TestCase):
                     binary_string += "0"
             binary_mask = int(binary_string, 2)
             known_result = np.zeros_like(test_rho)
-            for i in range(2 ** num_qubits):
+            for i in range(2**num_qubits):
                 known_result[i] = test_rho[i ^ binary_mask]
             self.assertTrue(np.allclose(test_result, known_result))
 
@@ -134,7 +134,7 @@ class TestNoise(unittest.TestCase):
         # kinda pointless because this is literally just the definition of
         # the function replicated
         num_qubits = 8
-        test_rho = np.random.random(2 ** num_qubits)
+        test_rho = np.random.random(2**num_qubits)
         test_rho = test_rho / np.sum(test_rho)
         for i in range(num_qubits):
             test_result = gg.znoisy(rho=test_rho, qubit_index=i)
@@ -149,7 +149,7 @@ class TestNoise(unittest.TestCase):
     def test_xnoisy(self):
         # use an alternative way to do the same thing (but with more unnecessary function calls)
         num_qubits = 8
-        test_rho = np.random.random(2 ** num_qubits)
+        test_rho = np.random.random(2**num_qubits)
         test_rho = test_rho / np.sum(test_rho)
         for i in range(num_qubits):
             test_graph = random_graph(num_qubits)
@@ -165,7 +165,7 @@ class TestNoise(unittest.TestCase):
     def test_ynoisy(self):
         # use an alternative way to do the same thing (but with more unnecessary function calls)
         num_qubits = 8
-        test_rho = np.random.random(2 ** num_qubits)
+        test_rho = np.random.random(2**num_qubits)
         test_rho = test_rho / np.sum(test_rho)
         for i in range(num_qubits):
             test_graph = random_graph(num_qubits)
@@ -440,12 +440,12 @@ class TestNoise(unittest.TestCase):
 class TestDistanceMeasures(unittest.TestCase):
     def _distance_measure_criterium(self, func):
         num_qubits = 5
-        rho = np.random.random(2 ** num_qubits)
+        rho = np.random.random(2**num_qubits)
         rho = rho / np.sum(rho)
         # distance measure is 0 for same state
         self.assertAlmostEqual(func(rho, rho), 0)
         # distance measure is > 0 for different states
-        sigma = np.random.random(2 ** num_qubits)
+        sigma = np.random.random(2**num_qubits)
         sigma = sigma / np.sum(sigma)
         self.assertGreater(func(rho, sigma), 0)
 
@@ -602,9 +602,9 @@ class TestDistanceMeasures(unittest.TestCase):
 
     def test_consistency(self):
         num_qubits = 5
-        rho = np.random.random(2 ** num_qubits)
+        rho = np.random.random(2**num_qubits)
         rho = rho / np.sum(rho)
-        sigma = np.random.random(2 ** num_qubits)
+        sigma = np.random.random(2**num_qubits)
         sigma = sigma / np.sum(sigma)
         # assert relationship between fidelity and fid_alternative
         self.assertAlmostEqual(
@@ -622,7 +622,7 @@ class TestDistanceMeasures(unittest.TestCase):
 class TestAuxiliaryFunctions(unittest.TestCase):
     def test_normalize(self):
         num_qubits = 5
-        rho = np.random.random(2 ** num_qubits)
+        rho = np.random.random(2**num_qubits)
         self.assertAlmostEqual(np.sum(gg.normalize(rho)), 1)
         # assert catching of numerical phenomena (usually happens when subtracting similar states)
         rho[0] = -1e-16
@@ -681,6 +681,53 @@ class TestAuxiliaryFunctions(unittest.TestCase):
                             self.assertEqual(
                                 complemented_graph.adj[i, j], test_graph.adj[i, j]
                             )
+
+    def test_complement_state(self):
+        # first some simple examples
+        test_graph = gg.Graph(3, [(0, 1), (1, 2)])
+        test_state = np.arange(2**test_graph.N)
+        result_state = gg.complement_state(test_state, 0, test_graph)
+        for i in range(2**3):
+            if i >= 2**2:
+                self.assertEqual(
+                    result_state[i], test_state[i ^ 2]
+                )  # bitwise map of neighbourhood
+            else:
+                self.assertEqual(result_state[i], test_state[i])
+        result_state = gg.complement_state(test_state, 1, test_graph)
+        for i in range(2**3):
+            if i & 2 != 0:
+                self.assertEqual(
+                    result_state[i], test_state[i ^ 5]
+                )  # bitwise map of neighbourhood
+            else:
+                self.assertEqual(result_state[i], test_state[i])
+        # test with random graph, random states and inefficient verification function
+        for num_vertices in range(1, 10):
+            for _ in range(10):
+                test_graph = random_graph(num_vertices)
+                test_state = np.random.random(2**num_vertices)
+                for lc_vertex in range(
+                    num_vertices
+                ):  # try all possible complementations
+                    result_state = gg.complement_state(
+                        test_state, lc_vertex, test_graph
+                    )
+                    lc_vertex_bitstring = 1 << (num_vertices - lc_vertex - 1)
+                    neighbourhood_bitstring = 0
+                    for vertex in range(num_vertices):
+                        if test_graph.adj[vertex, lc_vertex]:
+                            neighbourhood_bitstring = neighbourhood_bitstring | (
+                                1 << (num_vertices - vertex - 1)
+                            )
+                    # now verify
+                    for i in range(2**num_vertices):
+                        if i & lc_vertex_bitstring:
+                            self.assertEqual(
+                                result_state[i], test_state[i ^ neighbourhood_bitstring]
+                            )  # bitwise map of neighbourhood
+                        else:
+                            self.assertEqual(result_state[i], test_state[i])
 
 
 class TestTwoColorableEPP(unittest.TestCase):
@@ -788,7 +835,7 @@ class TestTwoColorableEPP(unittest.TestCase):
         test_graph = gg.Graph(
             N=5, E=((0, 1), (1, 2), (2, 3), (3, 4)), sets=[[0, 2, 4], [1, 3]]
         )  # 5 qubit linear cluster state
-        test_rho = np.zeros(2 ** 5, dtype=np.float)
+        test_rho = np.zeros(2**5, dtype=float)
         test_rho[0] = 1.0
         test_rho = gg.wnoise_all(rho=test_rho, p=0.99, graph=test_graph)
         test_result = gg.p1(rho=test_rho, graph=test_graph)
@@ -887,7 +934,7 @@ class TestTwoColorableEPP(unittest.TestCase):
         test_graph = gg.Graph(
             N=5, E=((0, 1), (1, 2), (2, 3), (3, 4)), sets=[[0, 2, 4], [1, 3]]
         )  # 5 qubit linear cluster state
-        test_rho = np.zeros(2 ** 5, dtype=np.float)
+        test_rho = np.zeros(2**5, dtype=float)
         test_rho[0] = 1.0
         test_rho = gg.wnoise_all(rho=test_rho, p=0.99, graph=test_graph)
         test_result = gg.p2(rho=test_rho, graph=test_graph)
@@ -938,7 +985,7 @@ class TestTwoColorableEPP(unittest.TestCase):
         test_graph = gg.Graph(
             N=4, E=((0, 1), (0, 2), (0, 3)), sets=[[0], [1, 2, 3]]
         )  # 4 qubit GHZ graph; two-colorable
-        test_rho = np.random.random(2 ** 4)
+        test_rho = np.random.random(2**4)
         test_rho = test_rho / np.sum(test_rho)
         test_result1 = gg.p1(rho=test_rho, graph=test_graph)
         test_result2 = gg.p1_var(rho=test_rho, sigma=test_rho, graph=test_graph)
@@ -1016,7 +1063,7 @@ class TestTwoColorableEPP(unittest.TestCase):
         test_graph = gg.Graph(
             N=4, E=((0, 1), (0, 2), (0, 3)), sets=[[0], [1, 2, 3]]
         )  # 4 qubit GHZ graph; two-colorable
-        test_rho = np.random.random(2 ** 4)
+        test_rho = np.random.random(2**4)
         test_rho = test_rho / np.sum(test_rho)
         test_result1 = gg.p2(rho=test_rho, graph=test_graph)
         test_result2 = gg.p2_var(rho=test_rho, sigma=test_rho, graph=test_graph)
@@ -1123,9 +1170,9 @@ class TestArbitraryGraphEPP(unittest.TestCase):
             N=4, E=((0, 1), (0, 2), (0, 3)), sets=[[0], [1, 2, 3]]
         )  # 4 qubit GHZ graph; two-colorable
         for _ in range(10):
-            test_rho = np.random.random(2 ** 4)
+            test_rho = np.random.random(2**4)
             test_rho = test_rho / np.sum(test_rho)
-            test_sigma = np.random.random(2 ** 4)
+            test_sigma = np.random.random(2**4)
             test_sigma = test_sigma / np.sum(test_sigma)
             test_result1 = gg.pk(
                 rho=test_rho,

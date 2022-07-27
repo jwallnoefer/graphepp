@@ -172,7 +172,7 @@ def noisy(rho, subset, graph=None):
     N = int(np.log2(len(rho)))
     rho = rho.reshape((2,) * N)
     rho = np.flip(rho, axis=subset)
-    rho = rho.reshape((2 ** N,))
+    rho = rho.reshape((2**N,))
     return rho
 
 
@@ -609,6 +609,48 @@ def local_complementation(n, graph):
     )  # just copies sets without thinking
 
 
+def complement_state(rho, n, graph):
+    """Update graph state basis entries after local complementation.
+
+    The entries in the new graph state basis are switched around a bit:
+    | µ'>_G' = U_n^τ(G) | µ>_G
+
+    with update rule
+    µ'_i = µ_i XOR µ_n  if i in the neighbourhood of n
+    µ'_i = µ_i          otherwise
+
+    This is shown in Appendix B of Phys. Rev. A 95, 012303 (2017)
+    Preprint: https://doi.org/10.48550/arXiv.1609.05754
+
+    Parameters
+    ----------
+    rho : np.ndarray
+        The state given in the graph state basis corresponding to the original
+        `graph`.
+    n : int
+        Local complementation around the `n`-th vertex.
+    graph : Graph
+        The original graph.
+
+    Returns
+    -------
+    np.ndarray
+        The state given in the graph state basis corresponding to the updated
+        graph.
+
+    """
+    # get neighbourhood of n
+    Nn = []
+    for i in range(graph.N):
+        if graph.adj[i, n]:
+            Nn += [i]
+    rho = rho.reshape((2,) * graph.N)
+    rho0, rho1 = np.split(rho, indices_or_sections=2, axis=n)
+    rho1 = np.flip(rho1, axis=Nn)
+    mu = np.concatenate([rho0, rho1], axis=n)
+    return mu.reshape(2**graph.N)
+
+
 # ====EPP functions for two-colorable states==== #
 
 
@@ -725,7 +767,7 @@ def p1(rho, graph):
 
     """
     mu = np.zeros(len(rho))
-    for i in range(2 ** graph.N):
+    for i in range(2**graph.N):
         j = i & (_mask_b((1 << len(graph.b)) - 1, graph))
         for k in range(2 ** len(graph.b)):
             m = _mask_b(k, graph)
@@ -760,7 +802,7 @@ def p2(rho, graph):
 
     """
     mu = np.zeros(len(rho))
-    for i in range(2 ** graph.N):
+    for i in range(2**graph.N):
         j = i & (_mask_a((1 << len(graph.a)) - 1, graph))
         for k in range(2 ** len(graph.a)):
             m = _mask_a(k, graph)
@@ -793,7 +835,7 @@ def p1_var(rho, sigma, graph):
 
     """
     mu = np.zeros(len(rho))
-    for i in range(2 ** graph.N):
+    for i in range(2**graph.N):
         j = i & (_mask_b((1 << len(graph.b)) - 1, graph))
         for k in range(2 ** len(graph.b)):
             m = _mask_b(k, graph)
@@ -826,7 +868,7 @@ def p2_var(rho, sigma, graph):
 
     """
     mu = np.zeros(len(rho))
-    for i in range(2 ** graph.N):
+    for i in range(2**graph.N):
         j = i & (_mask_a((1 << len(graph.a)) - 1, graph))
         for k in range(2 ** len(graph.a)):
             m = _mask_a(k, graph)
@@ -914,7 +956,7 @@ def pk(rho, sigma, graph1, graph2, subset):
     """
     mu = np.zeros(len(rho))
     other_set = tuple(i for i in range(graph1.N) if i not in subset)
-    for i in range(2 ** graph1.N):
+    for i in range(2**graph1.N):
         j = i & (_mask_k((1 << len(other_set)) - 1, graph1, other_set))
         for k in range(2 ** len(other_set)):
             m = _mask_k(k, graph1, other_set)
