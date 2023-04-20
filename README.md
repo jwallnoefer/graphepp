@@ -18,10 +18,6 @@ You can install GraphEEP into your python environment from the
 pip install graphepp
 ```
 
-As with all python packages, this can possible overwrite already installed
-package versions with its dependencies, which is why we recommend installing it
-in a dedicated virtual environment.
-
 If you encounter any problems, you can try installing it the exact versions of
 GraphEPP's dependencies that were used to develop it
 (specified in `Pipfile.lock`). This assumes Python 3.8 and
