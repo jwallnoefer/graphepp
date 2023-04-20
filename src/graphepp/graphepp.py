@@ -52,6 +52,15 @@ def adj_matrix(N, E):
     return adj
 
 
+def local_PauliZ(graph, n):
+    edges = list(graph.E)
+    # remove all edges which contain node n
+    newEdges = tuple((x, y) for (x, y) in edges if x != n)
+    newEdges = tuple((x, y) for (x, y) in newEdges if y != n)
+
+    return Graph(graph.N, E=newEdges)
+
+
 class Graph(object):
     """A graph object consisting of vertices and edges.
 
