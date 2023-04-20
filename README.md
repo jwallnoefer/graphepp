@@ -13,8 +13,6 @@ purification protocols (EPP) on noisy graph states.**
 
 You can install GraphEEP into your python environment from the
 [Python Package Index](https://pypi.org/project/graphepp/):
-(possibly overwriting already installed package versions in your
-environment with its dependencies):
 
 ```
 pip install graphepp
