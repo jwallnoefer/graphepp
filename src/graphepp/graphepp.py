@@ -66,7 +66,7 @@ def local_PauliZ(graph, n):
 
     Returns
     -------
-    Graph : Graph
+    Graph
         Returns a new Graph state with updated edge set
 
     """
@@ -92,7 +92,7 @@ def local_PauliY(graph, n):
 
     Returns
     -------
-    Graph : Graph
+    Graph
         Returns a new Graph state with updated edge set
 
     """
@@ -115,18 +115,17 @@ def local_PauliX(graph, n, neighbor=-1):
         neighboring qubit on which the local complementation is performed, optional parameter
     Returns
     -------
-    Graph : Graph
+    Graph
         Returns a new Graph state with updated edge set
 
     """
     # find all neighbors of qubit n
-    neighbors = np.array([(x, y) for (x, y) in list(graph.E) if x == n or y == n])
-
-    # if the vertex has neighbors, we perform the measurement, else we return the same graph state
-    if neighbors.shape[0] != 0:
-        # if neighbor is not specified, choose the first neighbor in the array
-        if neighbor == -1:
-            neighbor = neighbors[0][0] if neighbors[0][0] != n else neighbors[0][1]
+    neighbors = np.nonzero(graph.adj[n, :]
+    if neighbor == -1:
+        neighbor = neighbors[0]
+    else:
+        if neighbor not in neighbors:
+            raise ValueError(f"neighbor={neighbor} is not a neighbor of vertex n={n}.")
 
         # perform local complementation on neighbor
         loc_bo = local_complementation(neighbor, graph)
