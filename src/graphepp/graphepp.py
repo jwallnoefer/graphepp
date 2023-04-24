@@ -52,91 +52,6 @@ def adj_matrix(N, E):
     return adj
 
 
-def local_PauliZ(graph, n):
-    """Performs at qubit n a local Pauli Z measurement within the graph state.
-
-    The graph 'graph' has `N` vertices (labeled 0 to N-1) and edges `E`.
-
-    Parameters
-    ----------
-    graph : Graph
-        Instance of Graph class
-    n : int
-        index of the qubit on which the local Pauli Z measurement is performed
-
-    Returns
-    -------
-    Graph
-        Returns a new Graph state with updated edge set
-
-    """
-
-    if n < 0 or n >= graph.N:
-        raise ValueError("qubit index out of range: ", str(n))
-    edges = list(graph.E)
-    newEdges = tuple((x, y) for (x, y) in edges if x != n and y != n)
-    return Graph(graph.N, E=newEdges)
-
-
-def local_PauliY(graph, n):
-    """Performs at qubit n a local Pauli Y measurement within the graph state.
-
-    The graph 'graph' has `N` vertices (labeled 0 to N-1) and edges `E`.
-
-    Parameters
-    ----------
-    graph : Graph
-        Instance of Graph class
-    n : int
-        index of the qubit on which the local Pauli Y measurement is performed
-
-    Returns
-    -------
-    Graph
-        Returns a new Graph state with updated edge set
-
-    """
-    loc_graph = local_complementation(n, graph)
-    return local_PauliZ(loc_graph, n)
-
-
-def local_PauliX(graph, n, neighbor=-1):
-    """Performs at qubit n a local Pauli X measurement within the graph state.
-
-    The graph 'graph' has `N` vertices (labeled 0 to N-1) and edges `E`.
-
-    Parameters
-    ----------
-    graph : Graph
-        Instance of Graph class
-    n : int
-        index of the qubit on which the local Pauli Y measurement is performed
-    neighbor : int
-        neighboring qubit on which the local complementation is performed, optional parameter
-    Returns
-    -------
-    Graph
-        Returns a new Graph state with updated edge set
-
-    """
-    # find all neighbors of qubit n
-    neighbors = np.nonzero(graph.adj[n, :]
-    if neighbor == -1:
-        neighbor = neighbors[0]
-    else:
-        if neighbor not in neighbors:
-            raise ValueError(f"neighbor={neighbor} is not a neighbor of vertex n={n}.")
-
-        # perform local complementation on neighbor
-        loc_bo = local_complementation(neighbor, graph)
-        # perform the Y measurement on n
-        loc_bo_pauliY_n = local_PauliY(loc_bo, n)
-        # perfrom local complementation on neighbor return new graph state
-        return local_complementation(neighbor, loc_bo_pauliY_n)
-
-    return graph
-
-
 class Graph(object):
     """A graph object consisting of vertices and edges.
 
@@ -734,6 +649,92 @@ def complement_state(rho, n, graph):
     rho1 = np.flip(rho1, axis=Nn)
     mu = np.concatenate([rho0, rho1], axis=n)
     return mu.reshape(2**graph.N)
+
+
+def measure_Z(graph, n):
+    """Performs at qubit n a local Pauli Z measurement within the graph state.
+
+    The graph 'graph' has `N` vertices (labeled 0 to N-1) and edges `E`.
+
+    Parameters
+    ----------
+    graph : Graph
+        Instance of Graph class
+    n : int
+        index of the qubit on which the local Pauli Z measurement is performed
+
+    Returns
+    -------
+    Graph
+        Returns a new Graph state with updated edge set
+
+    """
+
+    if n < 0 or n >= graph.N:
+        raise ValueError("qubit index out of range: ", str(n))
+    edges = list(graph.E)
+    newEdges = tuple((x, y) for (x, y) in edges if x != n and y != n)
+    return Graph(graph.N, E=newEdges)
+
+
+def measure_Y(graph, n):
+    """Performs at qubit n a local Pauli Y measurement within the graph state.
+
+    The graph 'graph' has `N` vertices (labeled 0 to N-1) and edges `E`.
+
+    Parameters
+    ----------
+    graph : Graph
+        Instance of Graph class
+    n : int
+        index of the qubit on which the local Pauli Y measurement is performed
+
+    Returns
+    -------
+    Graph
+        Returns a new Graph state with updated edge set
+
+    """
+    loc_graph = local_complementation(n, graph)
+    return measure_Z(loc_graph, n)
+
+
+def measure_X(graph, n, neighbor=-1):
+    """Performs at qubit n a local Pauli X measurement within the graph state.
+
+    The graph 'graph' has `N` vertices (labeled 0 to N-1) and edges `E`.
+
+    Parameters
+    ----------
+    graph : Graph
+        Instance of Graph class
+    n : int
+        index of the qubit on which the local Pauli Y measurement is performed
+    neighbor : int
+        neighboring qubit on which the local complementation is performed, optional parameter
+    Returns
+    -------
+    Graph
+        Returns a new Graph state with updated edge set
+
+    """
+
+    # find all neighbors of qubit n
+    neighbors = np.nonzero(graph.adj[n, :])[0]
+
+    print(neighbors)
+
+    if neighbor == -1:
+        neighbor = neighbors[0]
+    if neighbor not in neighbors:
+        raise ValueError(f"neighbor={neighbor} is not a neighbor of vertex n={n}.")
+
+    # perform local complementation on neighbor
+    loc_bo = local_complementation(neighbor, graph)
+    # perform the Y measurement on n
+    loc_bo_pauliY_n = measure_Y(loc_bo, n)
+    # perfrom local complementation on neighbor return new graph state
+    return local_complementation(neighbor, loc_bo_pauliY_n)
 
 
 # ====EPP functions for two-colorable states==== #
