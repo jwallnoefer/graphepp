@@ -73,18 +73,6 @@ class Graph(object):
         Optionally define subsets of vertices, e.g. coloring of the graph
         as expected for the entanglement purification protocols. Default: []
 
-    Attributes
-    ----------
-    adj : np.ndarray
-        Adjacency matrix of the graph.
-    N
-    E
-    sets
-    a : tuple of ints
-        the first subset of vertices (e.g. one color)
-    b : tuple of ints
-        the second subset of vertices (e.g. one color)
-
     """
 
     def __init__(self, N, E, sets=[]):
@@ -111,23 +99,64 @@ class Graph(object):
 
     @property
     def N(self):
+        """Return the number of vertices of the graph.
+
+        Returns
+        -------
+        int
+            The number of vertices.
+
+        """
         return self._N
 
     @property
     def E(self):
+        """Return the edges of the graph.
+
+        Returns
+        -------
+        tuple[tuple[int]]
+            A tuple containing the edges of the graph as ordered 2-tuples.
+
+        """
         return self._E
 
     @property
     def sets(self):
+        """Return the subsets of vertices defined for the graph.
+
+        Usually these are related to colorings of the graph.
+
+        Returns
+        -------
+        tuple[tuple[int]]
+            All subsets in the order they were specified.
+
+        """
         return self._sets
 
     @property
     def adj(self):
+        """Return the adjacency matrix of the graph.
+
+        Returns
+        -------
+        np.ndarray
+            The `N`x`N` adjacency matrix.
+
+        """
         return np.array(self._adj, dtype=int)
 
     @property
     def a(self):
-        # subset a is the first color
+        """The first subset of vertices (first color).
+
+        Returns
+        -------
+        tuple[int] or None
+            The first subset, or None if no subsets were defined.
+
+        """
         try:
             return self.sets[0]
         except IndexError:
@@ -135,7 +164,14 @@ class Graph(object):
 
     @property
     def b(self):
-        # subset b is the first color
+        """The second subset of vertices (second color).
+
+        Returns
+        -------
+        tuple[int] or None
+            The second subset, or None if no second subset was defined.
+
+        """
         try:
             return self.sets[1]
         except IndexError:
