@@ -722,8 +722,6 @@ def measure_X(graph, n, neighbor=-1):
     # find all neighbors of qubit n
     neighbors = np.nonzero(graph.adj[n, :])[0]
 
-    print(neighbors)
-
     if neighbor == -1:
         neighbor = neighbors[0]
     if neighbor not in neighbors:
