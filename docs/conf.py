@@ -15,8 +15,8 @@ import graphepp
 # -- Project information -----------------------------------------------------
 
 project = "GraphEPP"
-copyright = "2021, Julius Wallnöfer"
-author = "Julius Wallnöfer"
+copyright = "2021-2023, Julius Wallnöfer; 2023-2024, Julius Wallnöfer and Julia Freund"
+author = "Julius Wallnöfer and Julia Freund"
 
 # The full version, including alpha/beta/rc tags
 release = graphepp.__version__
