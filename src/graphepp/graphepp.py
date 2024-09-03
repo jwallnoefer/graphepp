@@ -16,7 +16,7 @@ See README.md for an overview of the functionality.
 
 import numpy as np
 from itertools import product
-from functools import lru_cache
+from functools import lru_cache, cached_property
 
 
 # ====Graph definitions==== #
@@ -135,9 +135,20 @@ class Graph(object):
         """
         return self._sets
 
+    @cached_property
+    def _adjacency_matrix(self):
+        adjacency_matrix = np.array(self._adj, dtype=int)
+        adjacency_matrix.setflags(write=False)
+        return adjacency_matrix
+
     @property
     def adj(self):
         """Return the adjacency matrix of the graph.
+
+        In order to avoid rebuilding this matrix repeatedly,
+        when adj is called multiple times, the numpy array will
+        be cached and set to read only. Copy it, if you want
+        to create a modified version.
 
         Returns
         -------
@@ -145,7 +156,7 @@ class Graph(object):
             The `N`x`N` adjacency matrix.
 
         """
-        return np.array(self._adj, dtype=int)
+        return self._adjacency_matrix
 
     @property
     def a(self):

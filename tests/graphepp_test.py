@@ -38,6 +38,11 @@ class TestGraph(unittest.TestCase):
         with self.assertRaises(AttributeError):
             test_graph.adj = np.array([[0, 1], [1, 0]], dtype=int)
         adj = test_graph.adj
+        with self.assertRaises(ValueError):
+            adj[0, 0] = 1
+        with self.assertRaises(ValueError):
+            adj[1, 0] = 0
+        adj = np.copy(test_graph.adj)
         adj[0, 0] = 1
         adj[1, 0] = 0
         self.assertFalse(np.all(adj == test_graph.adj))
