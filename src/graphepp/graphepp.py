@@ -16,7 +16,7 @@ See README.md for an overview of the functionality.
 
 import numpy as np
 from itertools import product
-from functools import lru_cache
+from functools import lru_cache, cached_property
 
 
 # ====Graph definitions==== #
@@ -73,18 +73,6 @@ class Graph(object):
         Optionally define subsets of vertices, e.g. coloring of the graph
         as expected for the entanglement purification protocols. Default: []
 
-    Attributes
-    ----------
-    adj : np.ndarray
-        Adjacency matrix of the graph.
-    N
-    E
-    sets
-    a : tuple of ints
-        the first subset of vertices (e.g. one color)
-    b : tuple of ints
-        the second subset of vertices (e.g. one color)
-
     """
 
     def __init__(self, N, E, sets=[]):
@@ -111,23 +99,75 @@ class Graph(object):
 
     @property
     def N(self):
+        """Return the number of vertices of the graph.
+
+        Returns
+        -------
+        int
+            The number of vertices.
+
+        """
         return self._N
 
     @property
     def E(self):
+        """Return the edges of the graph.
+
+        Returns
+        -------
+        tuple[tuple[int]]
+            A tuple containing the edges of the graph as ordered 2-tuples.
+
+        """
         return self._E
 
     @property
     def sets(self):
+        """Return the subsets of vertices defined for the graph.
+
+        Usually these are related to colorings of the graph.
+
+        Returns
+        -------
+        tuple[tuple[int]]
+            All subsets in the order they were specified.
+
+        """
         return self._sets
+
+    @cached_property
+    def _adjacency_matrix(self):
+        adjacency_matrix = np.array(self._adj, dtype=int)
+        adjacency_matrix.setflags(write=False)
+        return adjacency_matrix
 
     @property
     def adj(self):
-        return np.array(self._adj, dtype=int)
+        """Return the adjacency matrix of the graph.
+
+        In order to avoid rebuilding this matrix repeatedly,
+        when adj is called multiple times, the numpy array will
+        be cached and set to read only. Copy it, if you want
+        to create a modified version.
+
+        Returns
+        -------
+        np.ndarray
+            The `N`x`N` adjacency matrix.
+
+        """
+        return self._adjacency_matrix
 
     @property
     def a(self):
-        # subset a is the first color
+        """The first subset of vertices (first color).
+
+        Returns
+        -------
+        tuple[int] or None
+            The first subset, or None if no subsets were defined.
+
+        """
         try:
             return self.sets[0]
         except IndexError:
@@ -135,7 +175,14 @@ class Graph(object):
 
     @property
     def b(self):
-        # subset b is the first color
+        """The second subset of vertices (second color).
+
+        Returns
+        -------
+        tuple[int] or None
+            The second subset, or None if no second subset was defined.
+
+        """
         try:
             return self.sets[1]
         except IndexError:
@@ -649,6 +696,90 @@ def complement_state(rho, n, graph):
     rho1 = np.flip(rho1, axis=Nn)
     mu = np.concatenate([rho0, rho1], axis=n)
     return mu.reshape(2**graph.N)
+
+
+def measure_Z(graph, n):
+    """Performs at qubit n a local Pauli Z measurement within the graph state.
+
+    The graph 'graph' has `N` vertices (labeled 0 to N-1) and edges `E`.
+
+    Parameters
+    ----------
+    graph : Graph
+        Instance of Graph class
+    n : int
+        index of the qubit on which the local Pauli Z measurement is performed
+
+    Returns
+    -------
+    Graph
+        Returns a new Graph state with updated edge set
+
+    """
+
+    if n < 0 or n >= graph.N:
+        raise ValueError("qubit index out of range: ", str(n))
+    edges = list(graph.E)
+    newEdges = tuple((x, y) for (x, y) in edges if x != n and y != n)
+    return Graph(graph.N, E=newEdges)
+
+
+def measure_Y(graph, n):
+    """Performs at qubit n a local Pauli Y measurement within the graph state.
+
+    The graph 'graph' has `N` vertices (labeled 0 to N-1) and edges `E`.
+
+    Parameters
+    ----------
+    graph : Graph
+        Instance of Graph class
+    n : int
+        index of the qubit on which the local Pauli Y measurement is performed
+
+    Returns
+    -------
+    Graph
+        Returns a new Graph state with updated edge set
+
+    """
+    loc_graph = local_complementation(n, graph)
+    return measure_Z(loc_graph, n)
+
+
+def measure_X(graph, n, neighbor=-1):
+    """Performs at qubit n a local Pauli X measurement within the graph state.
+
+    The graph 'graph' has `N` vertices (labeled 0 to N-1) and edges `E`.
+
+    Parameters
+    ----------
+    graph : Graph
+        Instance of Graph class
+    n : int
+        index of the qubit on which the local Pauli Y measurement is performed
+    neighbor : int
+        neighboring qubit on which the local complementation is performed, optional parameter
+    Returns
+    -------
+    Graph
+        Returns a new Graph state with updated edge set
+
+    """
+
+    # find all neighbors of qubit n
+    neighbors = np.nonzero(graph.adj[n, :])[0]
+
+    if neighbor == -1:
+        neighbor = neighbors[0]
+    if neighbor not in neighbors:
+        raise ValueError(f"neighbor={neighbor} is not a neighbor of vertex n={n}.")
+
+    # perform local complementation on neighbor
+    loc_bo = local_complementation(neighbor, graph)
+    # perform the Y measurement on n
+    loc_bo_pauliY_n = measure_Y(loc_bo, n)
+    # perfrom local complementation on neighbor return new graph state
+    return local_complementation(neighbor, loc_bo_pauliY_n)
 
 
 # ====EPP functions for two-colorable states==== #

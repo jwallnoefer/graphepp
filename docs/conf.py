@@ -15,8 +15,8 @@ import graphepp
 # -- Project information -----------------------------------------------------
 
 project = "GraphEPP"
-copyright = "2021, Julius Wallnöfer"
-author = "Julius Wallnöfer"
+copyright = "2021-2023, Julius Wallnöfer; 2023-2024, Julius Wallnöfer and Julia Freund"
+author = "Julius Wallnöfer and Julia Freund"
 
 # The full version, including alpha/beta/rc tags
 release = graphepp.__version__
@@ -56,3 +56,13 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = []
+
+# napoleon options
+napoleon_use_ivar = True
+napoleon_use_rtype = False
+
+# autodoc options
+# autodoc_member_order = "bysource"
+# autodoc_default_options = {
+#     "autosummary": True,
+# }
